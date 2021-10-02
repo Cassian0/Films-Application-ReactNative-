@@ -22,16 +22,35 @@ export const Input = styled.TextInput`
   border-radius: 50px;
   padding: 8px 15px;
   font-size: 18px;
-  color: #FFF;
+  color: #fff;
 `;
 
 export const SearchButton = styled.TouchableOpacity`
-    width: 15%;
-    height: 50px;
-    align-items: center;
-    justify-content: center;
+  width: 15%;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
 `;
 
-export const Title = styled.Text `
-    
+export const Title = styled.Text`
+  padding-top: 20px;
+  padding-bottom: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #FFF;
+  padding-left: 14px;
+  padding-right: 14px;
+`;
+
+export const BannerButton = styled.TouchableOpacity``;
+
+export const Banner = styled.Image`
+  height: 150px;
+  border-radius: 6px;
+  margin: 0 14px;
+`;
+
+export const SliderMovie = styled.FlatList `
+  height: 250px;
+  padding: 0 14px;
 `;
