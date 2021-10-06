@@ -10,6 +10,8 @@ import Stars from "react-native-stars";
 import { GenresItem } from "../../components/GenresItem";
 import { ModalLink } from "../../components/ModalLink";
 
+import { saveMovie, hasMovie, deleteMovie } from "../../utils/storage";
+
 import api, { key } from "../../services/api";
 
 import {
@@ -31,6 +33,7 @@ export function Detail() {
 
   const [movie, setMovie] = useState({});
   const [visible, setVisible] = useState(false);
+  const [favoritedMovie, setFavoritedMovie] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -49,6 +52,9 @@ export function Detail() {
 
       if (isActive) {
         setMovie(response.data);
+
+        const isFavorite = await hasMovie(response.data);
+        setFavoritedMovie(isFavorite);
       }
     }
 
@@ -61,14 +67,30 @@ export function Detail() {
     };
   }, []);
 
+  async function handleFavoriteMovie(movie) {
+    if (favoritedMovie) {
+      await deleteMovie(movie.id);
+      setFavoritedMovie(false);
+      alert("Filme removido da sua lista");
+    } else {
+      await saveMovie("@reactprime", movie);
+      setFavoritedMovie(true);
+      alert("Filme adicionado a sua lista");
+    }
+  }
+
   return (
     <Container>
       <Header>
         <HeaderButton activeOpacity={0.7} onPress={() => navigation.goBack()}>
           <Feather name="arrow-left" size={28} color="#FFF" />
         </HeaderButton>
-        <HeaderButton>
-          <Ionicons name="bookmark" size={28} color="#FFF" />
+        <HeaderButton onPress={() => handleFavoriteMovie(movie)}>
+          {favoritedMovie ? (
+            <Ionicons name="bookmark" size={28} color="#FFF" />
+          ) : (
+            <Ionicons name="bookmark-outline" size={28} color="#FFF" />
+          )}
         </HeaderButton>
       </Header>
 
@@ -111,7 +133,13 @@ export function Detail() {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <Title>Descrição</Title>
-        <Description>{movie?.overview}</Description>
+        {movie?.overview ? (
+          <Description>{movie?.overview}</Description>
+        ) : (
+          <Description>
+            Não foi econtrada nenhuma descrição para esse filme.
+          </Description>
+        )}
       </ScrollView>
 
       <Modal animationType="slide" transparent={true} visible={visible}>
